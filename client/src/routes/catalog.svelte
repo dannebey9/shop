@@ -3,11 +3,11 @@
 
 
     const productendpoint = 'http://localhost:5000/api/product';
-    const typeendpoint = 'http://localhost:5000/api/type'
-    const brandendpoint = 'http://localhost:5000/api/brand'
-    let products = [];
-    let brands = [];
-    let types = [];
+    const typeendpoint = 'http://localhost:5000/api/type';
+    const brandendpoint = 'http://localhost:5000/api/brand';
+    export let products = [];
+    export let brands = [];
+    export let types = [];
     onMount(async function () {
         const responseProd = await fetch(productendpoint);
         const responseType = await fetch(typeendpoint);
@@ -50,21 +50,21 @@
 </div>
 <div class:downtog="{togglemodal === false}" class="bg-gray-200 rounded-xl shadow-inner transition-all duration-300 bottom-0 mx-auto my-auto w-screen h-2/3 fixed z-10 text-center items-stretch justify-center">
 	<h1 class="text-2xl">Фильтры</h1>
-    <div>
+    <!-- <div>
         {#each brands as brand}
             <input type="checkbox" name="{brand.name}" id="">
         {/each}
-    </div>
+    </div>-->
     <div>
         {#each types as type}
             <input type="checkbox" name="{type.name}" id="">
         {/each}
-    </div>
+    </div> 
 </div>
 <div class="container mx-auto columns-auto flex flex-wrap gap-6 justify-center pb-10 pt-32">
     {#each products as product}
     <div class="max-w-md md:max-w-sm bg-white rounded-3xl shadow-xl shadow-red-100 hover:shadow-blue-400 transition-all duration-300 dark:bg-gray-800 dark:border-gray-700 ">
-        <a href="#">
+        <a href="##">
             <img class="p-8 rounded-t-lg" src="http://localhost:5000/{product.img}" alt="product image" />
         </a>
         <div class="px-5 pb-5">

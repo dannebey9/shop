@@ -32,7 +32,7 @@ class ProductController {
     let {brandId, typeId, limit, page} = req.body
     page = page || 1
     limit = limit || 20
-    let pffset = page * limit - limit
+    let offset = page * limit - limit
     let products;
     if(!brandId && !typeId){
       products = await Product.findAndCountAll({limit, offset})
