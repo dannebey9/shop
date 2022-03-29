@@ -16,10 +16,10 @@
         const dataType = await responseType.json();
         const dataBrand = await responseBrand.json();
 
-        console.log("Вывод даты: " + dataProd.rows[0].name);
+        console.log("Вывод даты: " + dataType[0] + "Вывод даты продкутов" + dataProd.rows[0]);
         products = dataProd.rows;
-        types = dataType.rows;
-        brands = dataBrand.rows;
+        types = dataType;
+        brands = dataBrand;
     });
 
     let togglemodal = false;
@@ -48,20 +48,36 @@
         Фильтр
     </button>
 </div>
-<div class:downtog="{togglemodal === false}" class="bg-gray-200 rounded-xl shadow-inner transition-all duration-300 bottom-0 mx-auto my-auto w-screen h-2/3 fixed z-10 text-center items-stretch justify-center">
-	<h1 class="text-2xl">Фильтры</h1>
-    <!-- <div>
-        {#each brands as brand}
-            <input type="checkbox" name="{brand.name}" id="">
-        {/each}
-    </div>-->
-    <div>
-        {#each types as type}
-            <input type="checkbox" name="{type.name}" id="">
-        {/each}
-    </div> 
+<div class="flex justify-center">
+    <div class:downtog="{togglemodal === false}" class="bg-gray-200 container rounded-xl shadow-inner transition-all duration-300 bottom-0 mx-auto my-auto h-3/6 fixed z-10 text-center items-stretch justify-center">
+        <h1 class="text-2xl pt-2">Фильтры</h1>
+        <button on:click="{togglermodal}" class="absolute top-0 right-0 p-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="flex justify-around text-center mt-8">
+            <div class="flex flex-col justify-center">
+                <h2 class="text-xl mb-4">Производитель</h2>
+                {#each brands as {name, id}}
+                <div class="flex">
+                    <input type="checkbox" name="{name}" {id}>
+                    <h3>{name}</h3>
+                </div>
+                {/each}
+            </div>
+            <div>
+                <h2 class="text-xl mb-4">Категория</h2>
+                {#each types as {name, id}}
+                <div class="flex">
+                    <input type="checkbox" name="{name}" {id}>
+                    <h3>{name}</h3>
+                </div>
+                {/each}
+            </div>
+        </div>
+        <button
+        class="text-white absolute bg-blue-700 hover:bg-blue-800 text-center focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800  bottom-4 w-full left-0"
+        >Применить</button>
+    </div>
 </div>
-<div class="container mx-auto columns-auto flex flex-wrap gap-6 justify-center pb-10 pt-32">
+<div class=" items-center container mx-auto columns-auto flex flex-wrap gap-6 justify-center pb-10 pt-32">
     {#each products as product}
     <div class="max-w-md md:max-w-sm bg-white rounded-3xl shadow-xl shadow-red-100 hover:shadow-blue-400 transition-all duration-300 dark:bg-gray-800 dark:border-gray-700 ">
         <a href="##">
