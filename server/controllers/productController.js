@@ -6,7 +6,7 @@ const ApiError = require('../error/ApiError')
 class ProductController {
   async create(req, res, next) {
     try {
-      const { name, price, brandId, typeId, info, available, quantity } = req.body
+      let { name, price, brandId, typeId, info, available, quantity } = req.body
       const { img } = req.files
       let fileName = uuid.v4() + ".jpg"
       img.mv(path.resolve(__dirname, '..', 'static', fileName))
@@ -29,7 +29,7 @@ class ProductController {
     }
   }
   async getAll(req, res) {
-    let {brandId, typeId, limit, page} = req.body
+    let {brandId, typeId, limit, page} = req.query
     page = page || 1
     limit = limit || 20
     let offset = page * limit - limit
@@ -56,6 +56,7 @@ class ProductController {
         include: [{model: ProductInfo, as: 'info'}]
       },
     )
+    
     return res.json(product)
   }
 }

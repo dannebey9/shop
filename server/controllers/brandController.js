@@ -1,5 +1,5 @@
 const {Brand} = require('../models/models');
-const ApiError = require('../error/ApiError');
+//const ApiError = require('../error/ApiError');
 
 class BrandController {
   async create (req, res) {
@@ -13,4 +13,4 @@ class BrandController {
   }
 }
 
-module.exports = new BrandController()
+module.exports = new BrandController();

@@ -1,25 +1,28 @@
 <script>
     import { onMount } from "svelte";
 
-
+    //const basketendpoint = 'http://localhost:5000/api/basket';
     const productendpoint = 'http://localhost:5000/api/product';
     const typeendpoint = 'http://localhost:5000/api/type';
     const brandendpoint = 'http://localhost:5000/api/brand';
     export let products = [];
     export let brands = [];
     export let types = [];
+    //export let basket = [];
     onMount(async function () {
         const responseProd = await fetch(productendpoint);
         const responseType = await fetch(typeendpoint);
         const responseBrand = await fetch(brandendpoint);
+        //const responseBasket = await fetch(basketendpoint);
         const dataProd = await responseProd.json();
         const dataType = await responseType.json();
         const dataBrand = await responseBrand.json();
+        //cosnt dataBasket = await responseBasket.json();
 
-        console.log("Вывод даты: " + dataType[0] + "Вывод даты продкутов" + dataProd.rows[0]);
         products = dataProd.rows;
         types = dataType;
         brands = dataBrand;
+        //basket = dataBasket;
     });
 
     let togglemodal = false;
@@ -140,14 +143,17 @@
                     >{product.rating}</span
                 >
             </div>
+            <form action="http://localhost:5000/api/basket" method="post">
+                <input type="number" class="hidden" value="{product.id}">
             <div class="flex justify-between items-center">
                 <span class="text-3xl font-bold text-gray-900 dark:text-white">{product.price} Рублей</span>
-                <a
-                    href="#"
+                <input
+                        type="submit"
+                        value="В корзину"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >В корзину</a
-                >
+                    >
             </div>
+            </form>
         </div>
     </div>
     {/each}
