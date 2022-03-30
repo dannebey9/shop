@@ -1,4 +1,10 @@
 <script>
+	import { onMount } from "svelte";
+	import { page } from '$app/stores';
+    let path;
+
+    $: path = $page.url.pathname;
+
 	export let siteName = 'siteName';
 	export let links;
 	// let togglemenu = false;
@@ -21,6 +27,22 @@
 		}
 		console.log(togglenot);
 	}
+	function selectlink(idurl){
+		if(path === links[idurl].url){
+			console.log("working")
+		}
+	}
+	onMount(async function (){
+		if (links.url === window.location.pathname){
+			console.log("Yes");
+		} else {
+			console.log("No" + links[0].url);
+		}
+		async function geturl(){
+			console.log(window.location.href + " " + window.location.host + " " + window.location.pathname);
+		}
+		geturl();
+	})
 </script>
 
 <nav
@@ -59,9 +81,9 @@
 			</a>
 			<!-- Left links -->
 			<ul class="navbar-nav hidden sm:flex pl-0 list-style-none mr-auto">
-				{#each links as { name, url }}
-					<li class="nav-item p-2">
-						<a class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" href={url}
+				{#each links as { name, url, id }}
+					<li class="nav-item p-2" {id}>
+						<a class="nav-link text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" on:click={() => selectlink(id)} href={url}
 							>{name}</a
 						>
 					</li>

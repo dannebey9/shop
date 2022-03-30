@@ -29,7 +29,7 @@ class ProductController {
     }
   }
   async getAll(req, res) {
-    let {brandId, typeId, limit, page} = req.body
+    let {brandId, typeId, limit, page} = req.query
     page = page || 1
     limit = limit || 20
     let offset = page * limit - limit
@@ -56,6 +56,7 @@ class ProductController {
         include: [{model: ProductInfo, as: 'info'}]
       },
     )
+    
     return res.json(product)
   }
 }

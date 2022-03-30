@@ -16,7 +16,6 @@
         const dataType = await responseType.json();
         const dataBrand = await responseBrand.json();
 
-        console.log("Вывод даты: " + dataType[0] + "Вывод даты продкутов" + dataProd.rows[0]);
         products = dataProd.rows;
         types = dataType;
         brands = dataBrand;
