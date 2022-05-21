@@ -1,5 +1,5 @@
 <template>
-  <div class="d-main-wrapper">
+  <div class="d-main-wrapper dark:text-white">
     <d-navbar/>
     <router-view></router-view>
     <d-footer/>

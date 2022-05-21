@@ -1,10 +1,10 @@
 <template>
     <tr>
-      <th>
-        <label>
-          <input type="checkbox" class="checkbox" />
-        </label>
-      </th>
+<!--      <th>-->
+<!--        <label>-->
+<!--          <input type="checkbox" class="checkbox" />-->
+<!--        </label>-->
+<!--      </th>-->
       <td>
         <div class="flex items-center space-x-3">
           <div class="avatar">
@@ -13,7 +13,7 @@
             </div>
           </div>
           <div>
-            <div class="font-bold">{{ basket_data.product.name }}</div>
+            <div class="font-bold text-center">{{ basket_data.product.name }}</div>
           </div>
         </div>
       </td>
@@ -21,43 +21,28 @@
         {{basket_data.product.price}}
       </td>
       <td>
-        <div class="form-control">
+        <div class="form-control text-center">
 
-          <div class="input-group">
-            <button class="btn btn-outline">-</button>
-            <input type="text" placeholder="" :value="basket_data.quantity" class="input input-bordered text-center w-16" />
-            <button class="btn btn-outline">+</button>
+          <div class="input-group mx-auto justify-center">
+            <button class="btn btn-outline" @click="sendPost('decrement')">-</button>
+            <input type="text" placeholder="" :key="basket_data.quantity" :value="basket_data.quantity" class="input input-bordered text-center w-16 border-accent" disabled/>
+            <button class="btn btn-outline" @click="sendPost('add')">+</button>
           </div>
-
         </div>
-<!--        <div class="flex w-[100px] h-[30px] text-xl border-gray-400 rounded-xl border-2 bg-gray-200">-->
-<!--                  <button type="button" class="w-[30px] h-[30px]">+</button>-->
-<!--                  <div type="number" class="pointer-events-none w-[40px] text-center">1</div>-->
-<!--                  <button type="button" class="w-[30px] h-[30px]">-</button>-->
-<!--                </div>-->
       </td>
       <th>
-        <button class="btn btn-ghost text-red-600 btn-xs">Удалить</button>
+        <button class="btn btn-ghost text-red-600 btn-xs" @click="sendPost('del')">Удалить</button>
       </th>
     </tr>
-
-
-<!--    <div class="d-basket-item flex">-->
-<!--      <img src="" alt="">-->
-<!--      <h3>-->
-
-<!--      </h3>-->
-<!--      <div class="flex w-[100px] h-[30px] text-xl border-gray-400 rounded-xl border-2 bg-gray-200">-->
-<!--        <button type="button" class="w-[30px] h-[30px]">+</button>-->
-<!--        <div type="number" class="pointer-events-none w-[40px] text-center">1</div>-->
-<!--        <button type="button" class="w-[30px] h-[30px]">-</button>-->
-<!--      </div>-->
-<!--      <button class="bg-red-500 w-[100px] h-[30px] rounded-xl">Удалить</button>-->
-<!--    </div>-->
-
 </template>
 
 <script>
+import VueCookies from "vue-cookies";
+import axios from "axios";
+import {useToast} from "vue-toastification";
+import store from "@/vuex/store";
+//import {nextTick} from "vue";
+
 export default {
   name: "d-basket-item",
   props: {
@@ -68,6 +53,41 @@ export default {
       }
     }
   },
+  data(){
+    return{
+    }
+  },
+  methods: {
+    refreshVuex() {
+      store.dispatch('GET_TOTAL_PRICE_FROM_API');
+      store.dispatch('GET_BASKET_PRODUCTS_FROM_API');
+    },
+    sendPost: function (url){
+      if (VueCookies.get("Authorization") != null) {
+        let data = JSON.stringify({
+          "productId": this.basket_data.productId,
+        });
+        let config = {
+          method: 'post',
+          url: "http://10.10.5.200:5000/api/basket/" + url,
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": VueCookies.get("Authorization")
+          },
+          data: data
+        };
+        axios(config)
+            .then((res) => {
+              useToast().info(res.data.message)
+              this.refreshVuex();
+              this.refreshVuex();
+            })
+      }
+      else {
+        useToast().error("Сначала нужно авторизироваться")
+      }
+    },
+  }
 }
 </script>
 
