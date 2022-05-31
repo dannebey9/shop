@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 5000
 
 const app = express()
 app.use(cors())
-app.use(express.json())
+app.use('/dist', express.static(__dirname + '/dist'))
+app.use(express.json());
 //app.use(express.static(path.resolve(__dirname, 'static')))
 app.use('/static', express.static(__dirname + '/static'));
 app.use(fileUpload({}))

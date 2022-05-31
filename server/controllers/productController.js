@@ -1,7 +1,8 @@
 const uuid = require('uuid');
 const path = require('path');
-const {Product, ProductInfo} = require('../models/models')
+const {Product, ProductInfo, Type, Brand} = require('../models/models')
 const ApiError = require('../error/ApiError')
+const {Op} = require("sequelize");
 
 class ProductController {
   async create(req, res, next) {
@@ -28,23 +29,64 @@ class ProductController {
       next(ApiError.badRequest(e.message))
     }
   }
-  async getAll(req, res) {
+
+  async getAllAdmin(req, res) {
     let {brandId, typeId, limit, page} = req.query
     page = page || 1
     limit = limit || 20
     let offset = page * limit - limit
     let products;
     if(!brandId && !typeId){
-      products = await Product.findAndCountAll({limit, offset})
+      products = await Product.findAndCountAll({limit, offset,
+        include: {
+          model: Type,
+          required: true
+        },
+      })
     }
     if (brandId && !typeId) {
-      products = await Product.findAndCountAll({where:{brandId}, limit, offset})
+      products = await Product.findAndCountAll(
+          {
+            where:{brandId},
+            include: {
+              model: {Type, Brand},
+              required: true
+            },
+            limit,
+            offset
+          }
+      )
     }
     if (!brandId && typeId) {
       products = await Product.findAndCountAll({where:{typeId}, limit, offset})
     }
     if (brandId && typeId) {
       products = await Product.findAndCountAll({where:{typeId, brandId}, limit, offset})
+    }
+    return res.json(products)
+  }
+
+  async getAllUser(req, res) {
+    let {brandId, typeId, limit, page} = req.query
+    page = page || 1
+    limit = limit || 20
+    let offset = page * limit - limit
+    let products;
+    if(!brandId && !typeId){
+      products = await Product.findAndCountAll({
+        where:{available: true, quantity:{[Op.gt]: 0}
+        }
+        ,limit, offset
+      })
+    }
+    if (brandId && !typeId) {
+      products = await Product.findAndCountAll({where:{brandId, available: true, quantity:{[Op.gt]: 0}}, limit, offset})
+    }
+    if (!brandId && typeId) {
+      products = await Product.findAndCountAll({where:{typeId, available: true, quantity:{[Op.gt]: 0}}, limit, offset})
+    }
+    if (brandId && typeId) {
+      products = await Product.findAndCountAll({where:{typeId, brandId, available: true, quantity:{[Op.gt]: 0}}, limit, offset})
     }
     return res.json(products)
   }

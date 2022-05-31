@@ -19,11 +19,16 @@ const BasketProduct = sequelize.define('basket_product', {
 const Order = sequelize.define('order', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     status: {type: DataTypes.INTEGER, unique: false, allowNull: false, defaultValue: 0},
-    price: {type: DataTypes.INTEGER, allowNull: false}
+    price: {type: DataTypes.INTEGER, allowNull: false},
+    deliveryAddress: {type: DataTypes.STRING, allowNull: true},
+    fio: {type: DataTypes.STRING, allowNull: true},
+    phone: {type: DataTypes.STRING, allowNull: true},
+    postalCode: {type: DataTypes.INTEGER, allowNull: true}
 })
 const OrderProduct = sequelize.define('order_product', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    quantity: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1}
+    quantity: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1},
+    price: {type: DataTypes.INTEGER, allowNull: false}
 })
 
 const Product = sequelize.define('product', {
@@ -57,11 +62,14 @@ const TypeBrand = sequelize.define('type_brand', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
+//User.hasOne(Basket)
+//Basket.belongsTo(User)
+
 User.hasOne(Basket)
 Basket.belongsTo(User)
 
-User.hasMany(Basket)
-Basket.belongsTo(User)
+User.hasMany(Order)
+Order.belongsTo(User)
 
 User.hasMany(Rating)
 Rating.belongsTo(User)
