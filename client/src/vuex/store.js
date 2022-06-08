@@ -2,6 +2,7 @@
 import Vuex from 'vuex'
 import axios from "axios";
 import VueCookies from 'vue-cookies'
+import {useToast} from "vue-toastification";
 //import {error} from "@babel/eslint-parser/lib/convert";
 
 //Vue.use(Vuex);
@@ -11,10 +12,17 @@ let store = new Vuex.Store({
         adminProducts: [],
         products: [],
         basketProducts: [],
-        auth: true,
+        auth: {auth: true, role: 2},
         totalBasketPrice: 0,
         orders: [],
-        createOrder: []
+        createOrder: [],
+        brands: [],
+        types: [],
+        moveProduct: [],
+        ordersAdmin: [],
+        orderStatus: [],
+        users: [],
+        roles: [],
     },
     mutations: {
         ADMIN_SET_PRODUCTS_TO_STATE: (state, adminProducts) => {
@@ -37,6 +45,27 @@ let store = new Vuex.Store({
         },
         SET_CREATE_ORDER: (state, create_order) => {
             state.createOrder = create_order
+        },
+        SET_BRANDS: (state, brands) => {
+            state.brands = brands
+        },
+        SET_TYPES: (state, types) => {
+            state.types = types
+        },
+        SET_MOVE_PRODUCTS: (state, moveProduct) => {
+            state.moveProduct = moveProduct
+        },
+        SET_ORDERS_ADMIN: (state, ordersAdmin) => {
+            state.ordersAdmin = ordersAdmin
+        },
+        SET_ORDER_STATUS: (state, orderStatus) => {
+            state.orderStatus = orderStatus
+        },
+        SET_ALL_USERS_ADMIN: (state, users) => {
+            state.users = users
+        },
+        SET_ALL_ROLES_ADMIN: (state, roles) => {
+            state.roles = roles
         }
 
     },
@@ -55,12 +84,25 @@ let store = new Vuex.Store({
                 })
         },
 
-        GET_PRODUCT_FROM_API({commit}) {
-            return axios('http://debitsoft.ru:8080/api/product/', {
+        GET_PRODUCT_FROM_API(ctx, obj = null) {
+            let strQuery = null
+            if (!obj.brandId && obj.typeId) {
+                strQuery = `http://debitsoft.ru:8080/api/product?typeId=${obj.typeId}&page=${obj.page}&offset=${obj.offset}`
+            }
+            if (obj.brandId && !obj.typeId) {
+                strQuery = `http://debitsoft.ru:8080/api/product?brandId=${obj.brandId}&page=${obj.page}&offset=${obj.offset}`
+            }
+            if (obj.brandId && obj.typeId) {
+                strQuery = `http://debitsoft.ru:8080/api/product?brandId=${obj.brandId}&brandId${obj.typeId}&page=${obj.page}&offset=${obj.offset}`
+            }
+            if (!obj.brandId && !obj.typeId) {
+                strQuery = `http://debitsoft.ru:8080/api/product?page=${obj.page}&offset=${obj.offset}`
+            }
+            return axios(strQuery, {
                 method: "GET",
             })
                 .then((products) => {
-                    commit('SET_PRODUCTS_TO_STATE', products.data)
+                    ctx.commit('SET_PRODUCTS_TO_STATE', products.data)
                     return products;
             })
                 .catch((error) => {
@@ -69,26 +111,28 @@ let store = new Vuex.Store({
                 })
 
         },
-        // GET_ORDER_CREATE_PRODUCT_FROM_API({commit}) {
-        //     return axios
-        // },
         GET_AUTH({commit}) {
             if(VueCookies.get("Authorization") !== null){
                 return axios('http://debitsoft.ru:8080/api/user/auth', {
                     method: "GET",
                     headers: {"Authorization": VueCookies.get("Authorization")}
                 })
-                    .then((authToken) => {
-                            let token = JSON.stringify(authToken.data.token);
-                            token = token.slice(1, token.length-1);
-                            VueCookies.set('Authorization', `Bearer ${token}`);
-                            commit('SET_AUTH_TO_STATE', true);
-                            return true;
+                    .then((response) => {
+                            let token = JSON.stringify(response.data.token);
+                            let role = response.data.role;
+                            if (token){
+                                token = token.slice(1, token.length-1);
+                                //role = role.slice(1, role.length-1);
+                                VueCookies.set('Authorization', `Bearer ${token}`);
+                                commit('SET_AUTH_TO_STATE', {auth: true, role: role});
+                            }
+                            else{
+                                VueCookies.remove('Authorization');
+                            }
                     })
                     .catch((error) => {
                         VueCookies.remove('Authorization');
                         console.log(error);
-                        return error;
                 })
                 // commit('SET_AUTH_TO_STATE', VueCookies.get("Authorization") !== null)
                 // return (VueCookies.get("Authorization") !== null)
@@ -120,8 +164,6 @@ let store = new Vuex.Store({
                 .then((basketProducts) => {
                     let totalPrice = 0;
                     basketProducts.data.forEach(function (item){
-                        console.log(item.quantity, item.product)
-                        console.log(item)
                         totalPrice += item.quantity * item.product.price
                     })
                     commit('SET_TOTAL_PRICE_TO_STATE', totalPrice)
@@ -148,6 +190,22 @@ let store = new Vuex.Store({
                     return error
                 });
         },
+        GET_ORDERS_ADMIN({commit}) {
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/order/admin',
+                headers: {"Authorization": VueCookies.get("Authorization")}
+            };
+            axios(config)
+                .then(function (response) {
+                    commit('SET_ORDERS_ADMIN', response.data)
+                    return response.data
+                })
+                .catch(function (error) {
+                    return error
+                });
+        },
         GET_CREATE_ORDER({commit}) {
             let axios = require('axios');
             let config = {
@@ -166,6 +224,118 @@ let store = new Vuex.Store({
                     return err
                 })
         },
+        GET_ALL_BRANDS({commit}) {
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/brand',
+                headers: {
+                    'Authorization': VueCookies.get("Authorization"),
+                    'Content-Type': 'application/json'
+                },
+            };
+
+            axios(config)
+                .then(function (response) {
+                    commit('SET_BRANDS', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки 'Brands'")
+                });
+        },
+        GET_ALL_TYPES({commit}){
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/type',
+                headers: {
+                    'Authorization': VueCookies.get("Authorization"),
+                    'Content-Type': 'application/json'
+                },
+            };
+
+            axios(config)
+                .then(function (response) {
+                    commit('SET_TYPES', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки Type'")
+                });
+        },
+        GET_ROLE_ADMIN({commit}){
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/user/getrole',
+                headers: {
+                    'Authorization': VueCookies.get("Authorization"),
+                    'Content-Type': 'application/json'
+                },
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(response.data)
+                    commit('SET_ALL_ROLES_ADMIN', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки ROLE'")
+                });
+        },
+        GET_ORDER_STATUS({commit}){
+          let axios = require('axios');
+          let config = {
+              method: 'get',
+              url: 'http://debitsoft.ru:8080/api/order/status',
+              headers:{
+                  'Authorization': VueCookies.get("Authorization"),
+                  'Content-Type': 'application/json'
+              }
+          };
+            axios(config)
+                .then(function (response) {
+                    commit('SET_ORDER_STATUS', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки Type'")
+                });
+        },
+        GET_ALL_MOVE_PRODUCTS({commit}){
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/product/getmove',
+                headers: {
+                    'Authorization': VueCookies.get("Authorization"),
+                    'Content-Type': 'application/json'
+                },
+            };
+            axios(config)
+                .then(function (response) {
+                    commit('SET_MOVE_PRODUCTS', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки MoveProduct")
+                });
+        },
+        GET_ALL_USERS_ADMIN({commit}){
+            let axios = require('axios');
+            let config = {
+                method: 'get',
+                url: 'http://debitsoft.ru:8080/api/user/get',
+                headers: {
+                    'Authorization': VueCookies.get("Authorization"),
+                    'Content-Type': 'application/json'
+                },
+            };
+            axios(config)
+                .then(function (response) {
+                    commit('SET_ALL_USERS_ADMIN', response.data)
+                })
+                .catch(function () {
+                    useToast().error("Произошла ошибка загрузки Users")
+                });
+        }
     },
     getters: {
         ADMIN_PRODUCTS(state) {
@@ -188,6 +358,27 @@ let store = new Vuex.Store({
         },
         CREATE_ORDER(state){
             return state.createOrder
+        },
+        BRANDS(state) {
+            return state.brands
+        },
+        TYPES(state) {
+            return state.types
+        },
+        MOVE_PRODUCTS(state) {
+            return state.moveProduct
+        },
+        ORDERS_ADMIN(state){
+            return state.ordersAdmin
+        },
+        ORDER_STATUS(state){
+            return state.orderStatus
+        },
+        USERS_ADMIN(state){
+            return state.users
+        },
+        ROLE_ADMIN(state){
+            return state.roles
         }
     }
 })

@@ -14,6 +14,12 @@ import auth from "@/router/middleware/auth";
 import guest from "@/router/middleware/guest";
 import middlewarePipeline from './middlewarePipeline'
 import store from "@/vuex/store";
+import AProductsMove from "@/components/Admin/a-products-move";
+import ABrands from "@/components/Admin/a-brands";
+import ATypes from "@/components/Admin/a-types";
+import AOrders from "@/components/Admin/a-orders";
+import admin from "@/router/middleware/admin";
+import AUsers from "@/components/Admin/a-users";
 
 
 const router = createRouter({
@@ -85,7 +91,7 @@ const router = createRouter({
             meta: {
                 layout: 'admin-layout',
                 middleware: [
-                    auth
+                    admin
                 ]
             }
         },
@@ -96,7 +102,62 @@ const router = createRouter({
             meta: {
                 layout: 'admin-layout',
                 middleware: [
-                    auth
+                    admin
+                ]
+            }
+        },
+        {
+            path: '/admin/products/move',
+            name: 'AdminProductsMove',
+            component: AProductsMove,
+            meta: {
+                layout: 'admin-layout',
+                middleware: [
+                    admin
+                ]
+            }
+        },
+        {
+            path: '/admin/brands',
+            name: 'ABrands',
+            component: ABrands,
+            meta: {
+                layout: 'admin-layout',
+                middleware: [
+                    admin
+                ]
+            }
+        },
+        {
+            path: '/admin/types',
+            name: 'ATypes',
+            component: ATypes,
+            meta: {
+                layout: 'admin-layout',
+                middleware: [
+                    admin
+                ]
+            }
+        },
+        {
+            path: '/admin/orders',
+            name: 'AOrders',
+            component: AOrders,
+            meta: {
+                layout: 'admin-layout',
+                middleware: [
+                    admin
+                ]
+            }
+        },
+        {
+            path: '/admin/users',
+            name: 'AUsers',
+            component: AUsers,
+            meta: {
+                layout: 'admin-layout',
+                middleware: [
+                    admin
                 ]
             }
         },

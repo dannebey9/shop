@@ -1,4 +1,4 @@
-const {Order, OrderProduct, Product, BasketProduct, User} = require('../models/models');
+const {Order, OrderProduct, Product, BasketProduct, User, OrderStatus, MoveProduct} = require('../models/models');
 
 
 
@@ -16,13 +16,80 @@ class OrderController {
                     model: Product,
                     required: true
                 }]
-            }],
+            },
+                {
+                    model:OrderStatus,
+                }],
             order: [
                 ['id', 'ASC'],
             ],
         });
         return res.json(getOrder);
     }
+
+    async getAllOrderAdmin (req, res) {
+        const getOrder = await Order.findAll({
+            include: [{
+                model: OrderProduct,
+                required: true,
+                include: [{
+                    model: Product,
+                    required: true
+                }]
+            },
+                {model: User},
+                {model: OrderStatus}
+            ],
+            order: [
+                ['id', 'ASC'],
+            ],
+        });
+        return res.json(getOrder);
+    }
+
+    async getOrderStatus (req, res) {
+        await OrderStatus.findAll()
+            .then((response) => {
+                return res.json(response)
+            })
+            .catch(() => {
+                return res.json({message: "Ошибка при передаче orderStatus", action: "error"})
+            })
+
+    }
+
+    async updateOrderAdmin (req, res) {
+        try{
+            const objectOrder = await Order.findByPk(req.body.id)
+            if(objectOrder.orderStatusId <= 2){
+                if (req.body.fio && req.body.deliveryAddress){
+                    const updateOrder = await Order.update({fio: req.body.fio, deliveryAddress: req.body.deliveryAddress,phone: req.body.phone, postalCode: req.body.postalCode , orderStatusId: req.body.orderStatusId}, {
+                        where: {
+                            id: req.body.id
+                        }
+                    })
+                    return res.json({message: "Заказ успешно отредактирован", action: "success"})
+                }
+                else {
+                    return res.json({message: "Поля не могут быть пустыми", action: "error"})
+                }
+            }
+            else{
+                if (objectOrder.orderStatusId) {
+                    const updateOrder = await Order.update({orderStatusId: req.body.orderStatusId}, {
+                        where: {
+                            id: req.body.id
+                        }
+                    })
+                    return res.json({message: "Статус заказа успешно изменен", action: "success", log: updateOrder})
+                }
+            }
+        }
+        catch (err){
+            res.json({message: "Произошла ошибка при изменении заказа"})
+        }
+    }
+
     async updateOrder (req, res) {
         try{
             const userId = req.user.id;
@@ -36,12 +103,12 @@ class OrderController {
                     deliveryAddress: address,
                     phone: phone,
                     postalCode: index,
-                    status: 1
+                    orderStatusId: 2
                 },{
                     where:{
                         userId: userId,
-                        status: "0"
-                    }
+                        orderStatusId: 1
+                    },
                 })
                 return res.json({message: "Заказ успешно оформлен, проверить статус заказа можно на странице \"Заказы\" "})
             }
@@ -56,7 +123,7 @@ class OrderController {
             const getOrderProduct = await Order.findAll({
                 where:{
                     userId: userId,
-                    status: 0
+                    orderStatusId: 1
                 },
                 include: [{
                     model: OrderProduct,
@@ -65,7 +132,8 @@ class OrderController {
                         model: Product,
                         required: true
                     }],
-                }],
+                },
+                    {model: OrderStatus}],
                 order: [
                     ['id', 'ASC'],
                 ],
@@ -95,7 +163,7 @@ class OrderController {
         const ChOrderState = await Order.findOne({
             where: {
                 userId: userId,
-                status: 0
+                orderStatusId: 1
             }
         })
         if(ChOrderState) {
@@ -104,7 +172,7 @@ class OrderController {
         await Order.create({
             price: totalPrice,
             userId: userId,
-            status: 0
+            orderStatusId: 1
         }).then((res) => {
             orderId = res.dataValues.id
 
@@ -128,7 +196,12 @@ class OrderController {
                         }
                     })
                         .then(() => {
-
+                            const moveProdOrder = MoveProduct.create({
+                                action: 6,
+                                quantity: item.quantity,
+                                userId: req.user.id,
+                                productId: pkProduct.id
+                            })
                         })
                         .catch(() => {
                             errors = ++errors
@@ -181,7 +254,7 @@ class OrderController {
             const orderSelect = await Order.findOne({
                 where: {
                     userId: req.user.id,
-                    status: 0
+                    orderStatusId: 1
                 },
                 include: {
                     model: OrderProduct,
@@ -214,7 +287,7 @@ class OrderController {
             Order.destroy({
                 where: {
                     userId: req.user.id,
-                    status: 0
+                    orderStatusId: 1
                 }
             })
                 .then(() => {
@@ -228,17 +301,10 @@ class OrderController {
         }
         catch (err){
             res.json({message: "Произошла ошибка, обновите страницу"})
-            // const orderSelect = await Order.findOne({
-            //     where: {
-            //         userId: req.user.id,
-            //         status: 0
-            //     },
-            //
-            // })
             const removeOrderProducts = Order.destroy({
                 where: {
                     userId: req.user.id,
-                    status: 0
+                    orderStatusId: 1
                 }
             })
 

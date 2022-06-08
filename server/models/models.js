@@ -5,7 +5,11 @@ const User = sequelize.define('user', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   email: {type: DataTypes.STRING, unique: true},
   password: {type: DataTypes.STRING},
-  role: {type: DataTypes.STRING, defaultValue: 'USER'},
+})
+
+const UserRole = sequelize.define('user_role', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    role: {type: DataTypes.STRING, allowNull: false},
 })
 const Basket = sequelize.define('basket', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -15,10 +19,20 @@ const BasketProduct = sequelize.define('basket_product', {
     quantity: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1}
 })
 
+const MoveProduct = sequelize.define('move_product', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    action: {type: DataTypes.INTEGER, allowNull: false},
+    quantity: {type: DataTypes.INTEGER, allowNull: true},
+    price: {type: DataTypes.INTEGER, allowNull: true}
+})
+
+const OrderStatus = sequelize.define('order_status', {
+    id: {type: DataTypes.INTEGER, primaryKey:true},
+    name: {type: DataTypes.STRING, allowNull: false}
+})
 
 const Order = sequelize.define('order', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    status: {type: DataTypes.INTEGER, unique: false, allowNull: false, defaultValue: 0},
     price: {type: DataTypes.INTEGER, allowNull: false},
     deliveryAddress: {type: DataTypes.STRING, allowNull: true},
     fio: {type: DataTypes.STRING, allowNull: true},
@@ -34,9 +48,9 @@ const OrderProduct = sequelize.define('order_product', {
 const Product = sequelize.define('product', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   name: {type: DataTypes.STRING, unique: true, allowNull: false},
-  price: {type: DataTypes.INTEGER, allowNull: false},
+  price: {type: DataTypes.FLOAT, allowNull: false},
   rating: {type: DataTypes.STRING, defaultValue: 0},
-  img: {type: DataTypes.STRING, allowNull: false},
+  img: {type: DataTypes.STRING, allowNull: true},
   available: {type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false},
   quantity: {type: DataTypes.INTEGER, allowNull: false}
 })
@@ -65,6 +79,12 @@ const TypeBrand = sequelize.define('type_brand', {
 //User.hasOne(Basket)
 //Basket.belongsTo(User)
 
+User.hasOne(MoveProduct)
+MoveProduct.belongsTo(User)
+
+Product.hasOne(MoveProduct)
+MoveProduct.belongsTo(Product)
+
 User.hasOne(Basket)
 Basket.belongsTo(User)
 
@@ -77,8 +97,19 @@ Rating.belongsTo(User)
 Basket.hasMany(BasketProduct)
 BasketProduct.belongsTo(Basket)
 
+OrderStatus.hasMany(Order)
+Order.belongsTo(OrderStatus)
+
 Order.hasMany(OrderProduct)
 OrderProduct.belongsTo(Order)
+
+UserRole.hasMany(User)
+User.belongsTo(UserRole, {
+    foreignKey: {
+        allowNull: false,
+        defaultValue: 1
+    }
+})
 
 Type.hasMany(Product)
 Product.belongsTo(Type)
@@ -112,5 +143,8 @@ module.exports = {
    TypeBrand,
    ProductInfo,
     Order,
-    OrderProduct
+    OrderProduct,
+    MoveProduct,
+    OrderStatus,
+    UserRole
 }

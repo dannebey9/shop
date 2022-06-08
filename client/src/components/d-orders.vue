@@ -31,8 +31,7 @@ export default {
   },
   mounted() {
     store.dispatch("GET_ORDERS")
-    console.log
-  }
+  },
 }
 </script>
 

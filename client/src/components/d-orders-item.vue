@@ -1,11 +1,11 @@
 <template>
   <div>
-  <li class="mb-4"><label :for="'order-modal' + order_data.id" :class="{'bg-base-300 border-red-400 border-2 mb-8': !order_data.fio,  'border-base-200': order_data.fio}" class="flex flex-nowrap text-center  border-2 flex-grow flex-col lg:flex-row lg:h-24">
+  <li class="mb-4"><label :for="'order-modal' + order_data.id" :class="{'bg-base-300 border-red-400 border-2 mb-8': order_data.orderStatusId === 1,  'border-base-200': order_data.orderStatusId !== 1}" class="flex flex-nowrap text-center  border-2 flex-grow flex-col lg:flex-row lg:h-24">
     <h4 class="basis-1/4 text-lg font-bold">Заказ {{order_data.id}}</h4>
     <h4 class="basis-1/4 text-lg">Стоимость: {{ order_data.price }} рублей</h4>
-    <h4 class="basis-1/4 text-lg">Статус: {{ getOrderState() }}</h4>
-    <h4 class="basis-1/4 text-lg" v-if="order_data.fio">ФИО: {{order_data.fio}}</h4>
-    <div v-if="!order_data.fio" class="basis-1/4 flex-col">
+    <h4 class="basis-1/4 text-lg">Статус: {{ order_data.order_status.name }}</h4>
+    <h4 class="basis-1/4 text-lg" v-if="order_data.orderStatusId !== 1">ФИО: {{order_data.fio}}</h4>
+    <div v-if="order_data.orderStatusId === 1" class="basis-1/4 flex-col">
       <h2 class="text-accent-content text-xl">Незавершенный заказ ожидает действия!</h2>
       <div>
         <button class="btn btn-sm btn-ghost text-blue-400" @click="continueOrder">Оформить</button>
@@ -32,7 +32,7 @@
         <span class="font-medium">{{order_data.createdAt.split('T')[0]}}</span>
         <div class="divider my-0 py-0"></div>
         <p class="py-2 font-bold">Статус заказа</p>
-        <span class="font-medium">{{getOrderState()}}</span>
+        <span class="font-medium">{{order_data.order_status.name}}</span>
         <div class="divider my-0 py-0"></div>
         <h3 class="text-xl font-bold mt-4">Состав заказа</h3>
         <div class="overflow-x-auto w-full">
@@ -103,7 +103,7 @@ export default {
   computed: {
     ...mapGetters({
       baskets: 'BASKETS',
-      totalPrice: 'TOTAL_PRICE'
+      totalPrice: 'TOTAL_PRICE',
     })
   },
 methods:{

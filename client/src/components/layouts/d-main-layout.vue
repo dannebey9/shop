@@ -30,7 +30,10 @@ export default {
 }
 </script>
 
-<style scoped>
-  .d-main-wrapper{
+<style>
+  input{
+    @apply dark:bg-base-200 active:bg-base-200
   }
+  input:focus{
+    @apply dark:bg-base-200}
 </style>
