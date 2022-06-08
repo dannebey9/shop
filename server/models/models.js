@@ -31,6 +31,7 @@ const OrderStatus = sequelize.define('order_status', {
     name: {type: DataTypes.STRING, allowNull: false}
 })
 
+
 const Order = sequelize.define('order', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     price: {type: DataTypes.INTEGER, allowNull: false},
@@ -62,11 +63,7 @@ const Brand = sequelize.define('brand',{
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   name: {type: DataTypes.STRING, unique: true, allowNull: false},
 })
-const Rating = sequelize.define('rating',{
-  id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-  rate: {type: DataTypes.INTEGER, allowNull: false},
-})
-const ProductInfo = sequelize.define('device_info',{
+const ProductInfo = sequelize.define('product_info',{
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   title: {type: DataTypes.STRING, allowNull: false},
   description: {type: DataTypes.STRING, allowNull: false},
@@ -91,8 +88,6 @@ Basket.belongsTo(User)
 User.hasMany(Order)
 Order.belongsTo(User)
 
-User.hasMany(Rating)
-Rating.belongsTo(User)
 
 Basket.hasMany(BasketProduct)
 BasketProduct.belongsTo(Basket)
@@ -117,9 +112,6 @@ Product.belongsTo(Type)
 Brand.hasMany(Product)
 Product.belongsTo(Brand)
 
-Product.hasMany(Rating)
-Rating.belongsTo(Product)
-
 Product.hasMany(BasketProduct)
 BasketProduct.belongsTo(Product)
 
@@ -132,6 +124,18 @@ ProductInfo.belongsTo(Product)
 Type.belongsToMany(Brand, {through: TypeBrand})
 Brand.belongsToMany(Type, {through: TypeBrand})
 
+    OrderStatus.bulkCreate([
+        {id: 1, name: "Оформляется"},
+        {id: 2, name: "Обрабатывается магазином"},
+        {id: 3, name: "Передан перевозчику"},
+        {id: 4, name: "Выполнен"},
+        {id: 5, name: "Возврат"}
+    ]).then(() => {
+        console.log("Успешно")
+    }).catch((err) =>{
+        console.log("Ошибка", err)
+    })
+
 module.exports = {
   User,
    Basket,
@@ -139,7 +143,6 @@ module.exports = {
    Product,
    Type,
    Brand,
-   Rating,
    TypeBrand,
    ProductInfo,
     Order,

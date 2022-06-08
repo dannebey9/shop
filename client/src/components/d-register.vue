@@ -70,7 +70,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/user/registration',
+        url: 'http://85.172.79.146:8080/api/user/registration',
         headers: {
           'Content-Type': 'application/json'
         },

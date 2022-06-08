@@ -26,6 +26,10 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
+            path: '/',
+            redirect: '/catalog'
+        },
+        {
             path: '/catalog',
             name: 'catalog',
             component: dCatalog

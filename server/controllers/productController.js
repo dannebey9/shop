@@ -182,7 +182,18 @@ class ProductController {
     if (brandId && typeId) {
       products = await Product.findAndCountAll({where:{typeId, brandId, available: true, quantity:{[Op.gt]: 0}}, limit, offset})
     }
-    products.countPercent = process.env.COUNT_PERCENT
+    console.log("test")
+    let pages = Math.ceil(products.count / limit)
+    console.log("PAGES_STARTT_STROKA", pages)
+    let pagearray = []
+    let i = 0
+    let age
+    for (i ; pages !== i; i++) {
+      age = i + 1
+      pagearray.push(age)
+    }
+    console.log(pagearray)
+    products.pages = pagearray
     return res.json(products)
   }
   async getOne(req, res) {

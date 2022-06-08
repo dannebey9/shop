@@ -71,7 +71,7 @@ let store = new Vuex.Store({
     },
     actions: {
         ADMIN_GET_PRODUCT_FROM_API({commit}) {
-            return axios('http://debitsoft.ru:8080/api/product/getadmin', {
+            return axios('http://85.172.79.146:8080/api/product/getadmin', {
                 method: "GET",
             })
                 .then((products) => {
@@ -86,17 +86,18 @@ let store = new Vuex.Store({
 
         GET_PRODUCT_FROM_API(ctx, obj = null) {
             let strQuery = null
+            obj.offset = 5
             if (!obj.brandId && obj.typeId) {
-                strQuery = `http://debitsoft.ru:8080/api/product?typeId=${obj.typeId}&page=${obj.page}&offset=${obj.offset}`
+                strQuery = `http://85.172.79.146:8080/api/product?typeId=${obj.typeId}&page=${obj.page}&limit=${obj.offset}`
             }
             if (obj.brandId && !obj.typeId) {
-                strQuery = `http://debitsoft.ru:8080/api/product?brandId=${obj.brandId}&page=${obj.page}&offset=${obj.offset}`
+                strQuery = `http://85.172.79.146:8080/api/product?brandId=${obj.brandId}&page=${obj.page}&limit=${obj.offset}`
             }
             if (obj.brandId && obj.typeId) {
-                strQuery = `http://debitsoft.ru:8080/api/product?brandId=${obj.brandId}&brandId${obj.typeId}&page=${obj.page}&offset=${obj.offset}`
+                strQuery = `http://85.172.79.146:8080/api/product?brandId=${obj.brandId}&brandId${obj.typeId}&page=${obj.page}&limit=${obj.offset}`
             }
             if (!obj.brandId && !obj.typeId) {
-                strQuery = `http://debitsoft.ru:8080/api/product?page=${obj.page}&offset=${obj.offset}`
+                strQuery = `http://85.172.79.146:8080/api/product?page=${obj.page}&limit=${obj.offset}`
             }
             return axios(strQuery, {
                 method: "GET",
@@ -113,7 +114,7 @@ let store = new Vuex.Store({
         },
         GET_AUTH({commit}) {
             if(VueCookies.get("Authorization") !== null){
-                return axios('http://debitsoft.ru:8080/api/user/auth', {
+                return axios('http://85.172.79.146:8080/api/user/auth', {
                     method: "GET",
                     headers: {"Authorization": VueCookies.get("Authorization")}
                 })
@@ -143,7 +144,7 @@ let store = new Vuex.Store({
             }
         },
         GET_BASKET_PRODUCTS_FROM_API({commit}) {
-            return axios('http://debitsoft.ru:8080/api/basket/', {
+            return axios('http://85.172.79.146:8080/api/basket/', {
                 method: "GET",
                 headers: {"Authorization": VueCookies.get("Authorization")}
             })
@@ -157,7 +158,7 @@ let store = new Vuex.Store({
                 })
         },
         GET_TOTAL_PRICE_FROM_API({commit}) {
-            return axios('http://debitsoft.ru:8080/api/basket/', {
+            return axios('http://85.172.79.146:8080/api/basket/', {
                 method: "GET",
                 headers: {"Authorization": VueCookies.get("Authorization")}
             })
@@ -178,7 +179,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/order',
+                url: 'http://85.172.79.146:8080/api/order',
                 headers: {"Authorization": VueCookies.get("Authorization")}
             };
             axios(config)
@@ -194,7 +195,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/order/admin',
+                url: 'http://85.172.79.146:8080/api/order/admin',
                 headers: {"Authorization": VueCookies.get("Authorization")}
             };
             axios(config)
@@ -210,7 +211,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/order/check',
+                url: 'http://85.172.79.146:8080/api/order/check',
                 headers: {
                     'Authorization': VueCookies.get("Authorization")
                 }
@@ -228,7 +229,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/brand',
+                url: 'http://85.172.79.146:8080/api/brand',
                 headers: {
                     'Authorization': VueCookies.get("Authorization"),
                     'Content-Type': 'application/json'
@@ -247,7 +248,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/type',
+                url: 'http://85.172.79.146:8080/api/type',
                 headers: {
                     'Authorization': VueCookies.get("Authorization"),
                     'Content-Type': 'application/json'
@@ -266,7 +267,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/user/getrole',
+                url: 'http://85.172.79.146:8080/api/user/getrole',
                 headers: {
                     'Authorization': VueCookies.get("Authorization"),
                     'Content-Type': 'application/json'
@@ -286,7 +287,7 @@ let store = new Vuex.Store({
           let axios = require('axios');
           let config = {
               method: 'get',
-              url: 'http://debitsoft.ru:8080/api/order/status',
+              url: 'http://85.172.79.146:8080/api/order/status',
               headers:{
                   'Authorization': VueCookies.get("Authorization"),
                   'Content-Type': 'application/json'
@@ -304,7 +305,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/product/getmove',
+                url: 'http://85.172.79.146:8080/api/product/getmove',
                 headers: {
                     'Authorization': VueCookies.get("Authorization"),
                     'Content-Type': 'application/json'
@@ -322,7 +323,7 @@ let store = new Vuex.Store({
             let axios = require('axios');
             let config = {
                 method: 'get',
-                url: 'http://debitsoft.ru:8080/api/user/get',
+                url: 'http://85.172.79.146:8080/api/user/get',
                 headers: {
                     'Authorization': VueCookies.get("Authorization"),
                     'Content-Type': 'application/json'
@@ -342,7 +343,7 @@ let store = new Vuex.Store({
             return state.adminProducts.rows
         },
         PRODUCTS(state) {
-            return state.products.rows;
+            return state.products;
         },
         BASKETS(state) {
             return state.basketProducts;

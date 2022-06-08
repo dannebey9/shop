@@ -53,9 +53,9 @@ export default {
     return{
       tokenSet: VueCookies.get("Authorization") !== null,
       links: [
-        { name: 'Главная', li: '/', id: '1' },
-        { name: 'Каталог', li: '/catalog', id: '2'},
-        { name: 'Заказы', li: '/orders', id: '3'},
+        { name: 'Каталог', li: '/catalog', id: '1'},
+        { name: 'Заказы', li: '/orders', id: '2'},
+        // { name: 'Корзина', li: '/basket', id: '3' },
       ],
     }
   },

@@ -122,7 +122,7 @@ export default {
 
         let config = {
           method: 'post',
-          url: 'http://debitsoft.ru:8080/api/product/',
+          url: 'http://85.172.79.146:8080/api/product/',
           headers: {
             'Authorization': VueCookies.get("Authorization"),
             'Content-Type': 'multipart/form-data'
@@ -140,7 +140,12 @@ export default {
               }
               this.modalCreate = false
               store.dispatch('ADMIN_GET_PRODUCT_FROM_API')
-              store.dispatch('GET_PRODUCT_FROM_API')
+              // store.dispatch('GET_PRODUCT_FROM_API')
+              this.changeName = null
+              this.changePrice = null
+              this.UrlImage = "https://imgholder.ru/300x300/8493a8/adb9ca&text=300x300&font=kelson"
+              this.changeType = null
+              this.changeBrand = null
             })
             .catch(function (err) {
               useToast().error('Ошибка изменения товара')

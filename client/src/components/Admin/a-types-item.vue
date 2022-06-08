@@ -54,7 +54,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/type/change',
+        url: 'http://85.172.79.146:8080/api/type/change',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/type/del',
+        url: 'http://85.172.79.146:8080/api/type/del',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'

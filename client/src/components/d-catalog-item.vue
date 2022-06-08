@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card w-72 h-[400px] bg-base-100 shadow-xl z-0">
-      <figure ><img :src="'http://debitsoft.ru:8080/static/' + product_data.img" alt="product image" class="h-[180px]"/></figure>
+      <figure ><img :src="'http://85.172.79.146:8080/static/' + product_data.img" alt="product image" class="h-[180px]"/></figure>
       <div class="card-body">
         <h2 class="card-title">{{ product_data.name }}</h2>
         <p class="card-title">{{ product_data.price }} Рублей</p>
@@ -90,7 +90,7 @@ export default {
           });
           let config = {
             method: 'post',
-            url: "http://debitsoft.ru:8080/api/basket/add",
+            url: "http://85.172.79.146:8080/api/basket/add",
             headers: {
               'Content-Type': 'application/json',
               "Authorization": VueCookies.get("Authorization")

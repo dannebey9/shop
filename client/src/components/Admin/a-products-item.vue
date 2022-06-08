@@ -8,7 +8,7 @@
 
         <div class="avatar">
           <div class="mask mask-squircle w-12 h-12">
-            <img :src="'http://debitsoft.ru:8080/static/' + product_data.img" alt="Avatar Tailwind CSS Component" />
+            <img :src="'http://85.172.79.146:8080/static/' + product_data.img" alt="Avatar Tailwind CSS Component" />
           </div>
         </div>
         <div>
@@ -155,10 +155,10 @@ export default {
       modalRegister: false,
       showUploadFile: false,
       name: this.product_data.name,
-      urlImage: 'http://debitsoft.ru:8080/static/' + this.product_data.img,
+      urlImage: 'http://85.172.79.146:8080/static/' + this.product_data.img,
 
       oldName: this.product_data.name,
-      oldImageUrl: 'http://debitsoft.ru:8080/static/' + this.product_data.img,
+      oldImageUrl: 'http://85.172.79.146:8080/static/' + this.product_data.img,
 
       changeName: this.product_data.name,
       changePrice: this.product_data.price,
@@ -205,7 +205,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/product/moveAdmin',
+        url: 'http://85.172.79.146:8080/api/product/moveAdmin',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'
@@ -239,7 +239,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/product/moveAdmin',
+        url: 'http://85.172.79.146:8080/api/product/moveAdmin',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'
@@ -270,7 +270,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/product/changeadmin',
+        url: 'http://85.172.79.146:8080/api/product/changeadmin',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'
@@ -306,7 +306,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/product/changeadmin',
+        url: 'http://85.172.79.146:8080/api/product/changeadmin',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'multipart/form-data'

@@ -6,7 +6,7 @@
 
           <div class="avatar">
             <div class="mask mask-squircle w-12 h-12">
-              <img :src="'http://debitsoft.ru:8080/static/' + basket_data.product.img" alt="Avatar Tailwind CSS Component" />
+              <img :src="'http://85.172.79.146:8080/static/' + basket_data.product.img" alt="Avatar Tailwind CSS Component" />
             </div>
           </div>
           <div>
@@ -68,7 +68,7 @@ export default {
         });
         let config = {
           method: 'post',
-          url: "http://debitsoft.ru:8080/api/basket/" + url,
+          url: "http://85.172.79.146:8080/api/basket/" + url,
           headers: {
             'Content-Type': 'application/json',
             "Authorization": VueCookies.get("Authorization")

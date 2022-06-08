@@ -59,7 +59,7 @@ export default {
         });
         let config = {
           method: 'post',
-          url: "http://debitsoft.ru:8080/api/user/login",
+          url: "http://85.172.79.146:8080/api/user/login",
           headers: {
             'Content-Type': 'application/json'
           },

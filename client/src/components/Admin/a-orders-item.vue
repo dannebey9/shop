@@ -38,7 +38,7 @@
                 <div class="flex items-center space-x-3">
                   <div class="avatar">
                     <div class="mask mask-squircle w-12 h-12">
-                      <img :src="'http://debitsoft.ru:8080/static/' + item.product.img" alt="Avatar Tailwind CSS Component" />
+                      <img :src="'http://85.172.79.146:8080/static/' + item.product.img" alt="Avatar Tailwind CSS Component" />
                     </div>
                   </div>
                   <div>
@@ -159,7 +159,7 @@ export default {
 
       let config = {
         method: 'post',
-        url: 'http://debitsoft.ru:8080/api/order/changeadmin',
+        url: 'http://85.172.79.146:8080/api/order/changeadmin',
         headers: {
           'Authorization': VueCookies.get("Authorization"),
           'Content-Type': 'application/json'
